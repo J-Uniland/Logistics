@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOGIX SOLUTIONS | Gestión Integral de Cadena de Suministro</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --bg-section: #182234;
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #2563eb;
+    --border-color: #334155;
+  }
+
+  /*
+  :root {
+    --bg-main: #fdfbf7;
+    --bg-card: #ffffff;
+    --bg-section: #f1f5f9;
+    --text-primary: #1f2937;
+    --text-muted: #6b7280;
+    --accent: #9f1239;
+    --border-color: #e2e8f0;
+  }
+  */
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+
+  .bg-main { background-color: var(--bg-main); }
+  .bg-card { background-color: var(--bg-card); }
+  .bg-section { background-color: var(--bg-section); }
+  .text-primary { color: var(--text-primary); }
+  .text-muted { color: var(--text-muted); }
+  .text-accent { color: var(--accent); }
+  .bg-accent { background-color: var(--accent); }
+  .border-themed { border-color: var(--border-color); }
+
+  .btn-accent {
+    background-color: var(--accent);
+    color: #ffffff;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .btn-accent:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .card-themed {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+  }
+
+  .input-themed {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+  }
+  .input-themed::placeholder { color: var(--text-muted); }
+  .input-themed:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+  }
+
+  .tab-btn {
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+  }
+  .tab-btn.active-tab {
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .nav-link {
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+  }
+  .nav-link:hover { color: var(--text-primary); }
+
+  .divider-themed { border-color: var(--border-color); }
+
+  /* Mobile nav drawer */
+  #mobileDrawer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  #mobileDrawer.open { max-height: 480px; }
+
+  .hamburger-line {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: var(--text-primary);
+    margin: 4px 0;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  #hamburgerBtn.open .line-1 { transform: translateY(6px) rotate(45deg); }
+  #hamburgerBtn.open .line-2 { opacity: 0; }
+  #hamburgerBtn.open .line-3 { transform: translateY(-6px) rotate(-45deg); }
+
+  /* Modals */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.75);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .modal-overlay.open { display: flex; }
+</style>
+</head>
+<body class="bg-main text-primary antialiased">
+
+<!-- 1. HEADER -->
+<header class="sticky top-0 z-50 bg-main/95 backdrop-blur border-b border-themed">
+  <nav class="max-w-7xl mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
+    <a href="#inicio" class="text-xl font-bold tracking-widest text-primary">LOGIX <span class="text-accent">SOLUTIONS</span></a>
+    <div class="hidden lg:flex items-center gap-8 text-sm font-medium">
+      <a href="#inicio" class="nav-link">Inicio</a>
+      <a href="#introduccion" class="nav-link">Introducción</a>
+      <a href="#servicios" class="nav-link">Servicios</a>
+      <a href="#calculadora" class="nav-link">Calculadora</a>
+      <a href="#cobertura" class="nav-link">Cobertura</a>
+      <a href="#contacto" class="nav-link">Contacto</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="#contacto" class="hidden sm:inline-block btn-accent px-5 py-2.5 rounded text-sm font-semibold">Solicitar Cotización</a>
+      <button type="button" id="hamburgerBtn" class="lg:hidden flex flex-col justify-center items-center w-10 h-10" aria-label="Abrir menú" aria-expanded="false">
+        <span class="hamburger-line line-1"></span>
+        <span class="hamburger-line line-2"></span>
+        <span class="hamburger-line line-3"></span>
+      </button>
+    </div>
+  </nav>
+  <div id="mobileDrawer" class="lg:hidden bg-main border-t border-themed">
+    <div class="flex flex-col px-6 py-4 gap-4 text-sm font-medium">
+      <a href="#inicio" class="nav-link">Inicio</a>
+      <a href="#introduccion" class="nav-link">Introducción</a>
+      <a href="#servicios" class="nav-link">Servicios</a>
+      <a href="#calculadora" class="nav-link">Calculadora</a>
+      <a href="#cobertura" class="nav-link">Cobertura</a>
+      <a href="#contacto" class="nav-link">Contacto</a>
+      <a href="#contacto" class="btn-accent text-center px-5 py-2.5 rounded text-sm font-semibold">Solicitar Cotización</a>
+    </div>
+  </div>
+</header>
+
+<!-- 2. HERO -->
+<section id="inicio" class="bg-main">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28 grid lg:grid-cols-2 gap-14 items-center">
+    <div data-aos="fade-up">
+      <h1 class="text-4xl lg:text-6xl font-extrabold leading-tight text-primary">Soluciones Integrales de Gestión Logística</h1>
+      <p class="mt-6 text-lg text-muted max-w-lg">Orquestamos y administramos cada eslabón de su cadena de suministro: recolección, transporte internacional, aduanas y entrega final desde un único punto de contacto.</p>
+    </div>
+
+    <div class="card-themed rounded-xl p-6 lg:p-8" data-aos="fade-up" data-aos-delay="150">
+      <div class="flex gap-6 border-b border-themed mb-6" id="trackingTabs">
+        <button type="button" class="tab-btn active-tab pb-3 font-semibold text-sm" data-tab="maritimo">Marítimo</button>
+        <button type="button" class="tab-btn pb-3 font-semibold text-sm" data-tab="aereo">Aéreo</button>
+        <button type="button" class="tab-btn pb-3 font-semibold text-sm" data-tab="terrestre">Terrestre</button>
+      </div>
+      <p class="text-sm text-muted mb-4" id="trackingLabel">Rastreo de contenedor marítimo</p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input type="text" id="trackingInput" placeholder="Ingrese número de guía o contenedor..." class="input-themed flex-1 rounded px-4 py-3 text-sm">
+        <button type="button" class="btn-accent px-6 py-3 rounded text-sm font-semibold whitespace-nowrap">Rastrear Envío</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. INTRODUCTION -->
+<section id="introduccion" class="bg-section border-y border-themed">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20 grid lg:grid-cols-2 gap-14 items-start">
+    <div data-aos="fade-right">
+      <span class="text-accent text-sm font-semibold tracking-widest uppercase">Nuestro Modelo</span>
+      <h2 class="text-3xl lg:text-4xl font-bold mt-3 text-primary">Control Total de su Cadena de Suministro</h2>
+    </div>
+    <div class="space-y-5 text-muted leading-relaxed" data-aos="fade-right" data-aos-delay="150">
+      <p>En LOGIX SOLUTIONS no solo coordinamos fletes; diseñamos y gestionamos la arquitectura logística completa para su empresa. Administramos proveedores seleccionados, optimizamos rutas multimodales y supervisamos trámites aduanales, brindándole absoluta visibilidad y un solo responsable operativo.</p>
+      <p>Nuestro equipo ejecutivo actúa como el punto único de administración entre su empresa y una red de aliados estratégicos calificados, garantizando consistencia operativa y control documental en cada etapa del proceso.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. SERVICES -->
+<section id="servicios" class="bg-main">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20">
+    <h2 class="text-3xl lg:text-4xl font-bold text-center text-primary" data-aos="fade-up">Soluciones Multimodales Integradas</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-14">
+      <div class="card-themed rounded-xl p-7" data-aos="zoom-in">
+        <h3 class="text-lg font-bold text-primary mb-3">Gestión Integral Multimodal</h3>
+        <p class="text-sm text-muted leading-relaxed">Coordinación de transporte marítimo, aéreo y terrestre bajo una sola administración operativa.</p>
+      </div>
+      <div class="card-themed rounded-xl p-7" data-aos="zoom-in" data-aos-delay="100">
+        <h3 class="text-lg font-bold text-primary mb-3">Coordinación de Despacho y Trámites Aduanales</h3>
+        <p class="text-sm text-muted leading-relaxed">Supervisión documental y seguimiento de liberación con agentes aduanales certificados.</p>
+      </div>
+      <div class="card-themed rounded-xl p-7" data-aos="zoom-in" data-aos-delay="200">
+        <h3 class="text-lg font-bold text-primary mb-3">Estrategia de Cadena de Suministro End-to-End</h3>
+        <p class="text-sm text-muted leading-relaxed">Diseño de rutas y planificación logística alineada a los objetivos de su operación.</p>
+      </div>
+      <div class="card-themed rounded-xl p-7" data-aos="zoom-in" data-aos-delay="300">
+        <h3 class="text-lg font-bold text-primary mb-3">Administración y Auditoría de Proveedores Logísticos</h3>
+        <p class="text-sm text-muted leading-relaxed">Evaluación continua de la red de aliados estratégicos para asegurar cumplimiento y desempeño.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. CBM CALCULATOR -->
+<section id="calculadora" class="bg-section border-y border-themed">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20">
+    <h2 class="text-3xl lg:text-4xl font-bold text-center text-primary" data-aos="fade-up">Calculadora de Volumen y Peso Cobrable</h2>
+
+    <div class="grid lg:grid-cols-2 gap-8 mt-14" data-aos="fade-up" data-aos-delay="100">
+      <div class="card-themed rounded-xl p-8 space-y-5">
+        <div>
+          <label class="block text-sm font-semibold text-muted mb-2">Largo (cm)</label>
+          <input type="number" id="cbmLargo" min="0" step="any" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="0">
+        </div>
+        <div class="grid grid-cols-2 gap-5">
+          <div>
+            <label class="block text-sm font-semibold text-muted mb-2">Ancho (cm)</label>
+            <input type="number" id="cbmAncho" min="0" step="any" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="0">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-muted mb-2">Alto (cm)</label>
+            <input type="number" id="cbmAlto" min="0" step="any" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="0">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-5">
+          <div>
+            <label class="block text-sm font-semibold text-muted mb-2">Cantidad (piezas)</label>
+            <input type="number" id="cbmCantidad" min="0" step="1" value="1" class="input-themed w-full rounded px-4 py-3 text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-muted mb-2">Peso Real Total (kg)</label>
+            <input type="number" id="cbmPeso" min="0" step="any" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="0">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-muted mb-2">Modalidad de Transporte</label>
+          <select id="cbmModalidad" class="input-themed w-full rounded px-4 py-3 text-sm">
+            <option value="aereo">Aéreo (166.67 kg/m³)</option>
+            <option value="maritimo">Marítimo (Factor 1:1000)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-rows-4 gap-5">
+        <div class="card-themed rounded-xl p-6 flex items-center justify-between">
+          <span class="text-sm font-semibold text-muted">Volumen Total (CBM)</span>
+          <span id="outVolumen" class="text-2xl font-bold text-accent">0.000 m³</span>
+        </div>
+        <div class="card-themed rounded-xl p-6 flex items-center justify-between">
+          <span class="text-sm font-semibold text-muted">Peso Real Total</span>
+          <span id="outPesoReal" class="text-2xl font-bold text-primary">0.00 kg</span>
+        </div>
+        <div class="card-themed rounded-xl p-6 flex items-center justify-between">
+          <span class="text-sm font-semibold text-muted">Peso Volumétrico</span>
+          <span id="outPesoVolumetrico" class="text-2xl font-bold text-primary">0.00 kg</span>
+        </div>
+        <div class="card-themed rounded-xl p-6 flex items-center justify-between border-2" style="border-color: var(--accent);">
+          <span class="text-sm font-semibold text-primary">Peso Cobrable</span>
+          <span id="outPesoCobrable" class="text-2xl font-bold text-accent">0.00 kg</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. COVERAGE METRICS -->
+<section id="cobertura" class="bg-main">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20">
+    <h2 class="text-3xl lg:text-4xl font-bold text-center text-primary" data-aos="fade-up">Respaldo y Cobertura Global</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-14 text-center">
+      <div class="card-themed rounded-xl p-8" data-aos="fade-up">
+        <p class="text-4xl font-extrabold text-accent">100%</p>
+        <p class="text-sm text-muted mt-2">Cobertura Administrada</p>
+      </div>
+      <div class="card-themed rounded-xl p-8" data-aos="fade-up" data-aos-delay="100">
+        <p class="text-4xl font-extrabold text-accent">+50</p>
+        <p class="text-sm text-muted mt-2">Red de Aliados Estratégicos</p>
+      </div>
+      <div class="card-themed rounded-xl p-8" data-aos="fade-up" data-aos-delay="200">
+        <p class="text-4xl font-extrabold text-accent">1</p>
+        <p class="text-sm text-muted mt-2">Solo Punto de Contacto</p>
+      </div>
+      <div class="card-themed rounded-xl p-8" data-aos="fade-up" data-aos-delay="300">
+        <p class="text-4xl font-extrabold text-accent">99.4%</p>
+        <p class="text-sm text-muted mt-2">Entregas Supervisadas a Tiempo</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. CONTACT FORM -->
+<section id="contacto" class="bg-section border-y border-themed">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20">
+    <h2 class="text-3xl lg:text-4xl font-bold text-center text-primary" data-aos="fade-up">Inicie la Optimización de su Logística</h2>
+
+    <form id="contactForm" class="card-themed rounded-xl p-8 lg:p-10 mt-14 max-w-3xl mx-auto grid sm:grid-cols-2 gap-6" data-aos="fade-up" data-aos-delay="100">
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-semibold text-muted mb-2">Servicio</label>
+        <select id="cfServicio" class="input-themed w-full rounded px-4 py-3 text-sm">
+          <option>Gestión Integral Multimodal</option>
+          <option>Coordinación de Despacho y Trámites Aduanales</option>
+          <option>Estrategia de Cadena de Suministro End-to-End</option>
+          <option>Administración y Auditoría de Proveedores Logísticos</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-muted mb-2">Origen</label>
+        <input type="text" id="cfOrigen" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="Ciudad, país">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-muted mb-2">Destino</label>
+        <input type="text" id="cfDestino" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="Ciudad, país">
+      </div>
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-semibold text-muted mb-2">Dimensiones / Peso</label>
+        <input type="text" id="cfDimensiones" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="Ej. 120x80x100 cm, 450 kg">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-muted mb-2">Nombre</label>
+        <input type="text" id="cfNombre" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="Nombre completo">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-muted mb-2">Correo</label>
+        <input type="email" id="cfCorreo" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="correo@empresa.com">
+      </div>
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-semibold text-muted mb-2">Teléfono</label>
+        <input type="tel" id="cfTelefono" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="+00 000 000 0000">
+      </div>
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-semibold text-muted mb-2">Comentarios</label>
+        <textarea rows="4" id="cfComentarios" class="input-themed w-full rounded px-4 py-3 text-sm" placeholder="Detalles adicionales del envío..."></textarea>
+      </div>
+      <div class="sm:col-span-2">
+        <button type="submit" class="btn-accent w-full rounded px-6 py-3.5 text-sm font-semibold">Enviar Solicitud</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- 8. FOOTER -->
+<footer id="footer" class="bg-main">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div>
+        <p class="text-lg font-bold text-primary">LOGIX <span class="text-accent">SOLUTIONS</span></p>
+        <p class="text-sm text-muted mt-3 leading-relaxed">Gestión y orquestación logística ejecutiva de alcance global.</p>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-primary mb-3">Contacto</p>
+        <ul class="text-sm text-muted space-y-2">
+          <li><a href="mailto:cotizaciones@logixsolutions.mx" class="nav-link">cotizaciones@logixsolutions.mx</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-primary mb-3">Legal</p>
+        <ul class="text-sm text-muted space-y-2">
+          <li><button type="button" id="openTerminos" class="nav-link text-left">Términos y Condiciones</button></li>
+          <li><button type="button" id="openPrivacidad" class="nav-link text-left">Aviso de Privacidad</button></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-primary mb-3">Navegación</p>
+        <ul class="text-sm text-muted space-y-2">
+          <li><a href="#servicios" class="nav-link">Servicios</a></li>
+          <li><a href="#calculadora" class="nav-link">Calculadora</a></li>
+          <li><a href="#contacto" class="nav-link">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-themed mt-10 pt-6 text-center text-xs text-muted">
+      © 2026 LOGIX SOLUTIONS. Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modalTerminos">
+  <div class="card-themed rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-bold text-primary">Términos y Condiciones</h3>
+      <button type="button" class="close-modal text-muted text-2xl leading-none" data-modal="modalTerminos">&times;</button>
+    </div>
+    <div class="text-sm text-muted space-y-4 leading-relaxed">
+      <p>LOGIX SOLUTIONS actúa como orquestador y administrador logístico, coordinando servicios de transporte y despacho a través de una red de aliados estratégicos independientes. La presente sección describe los términos generales que rigen la relación contractual entre LOGIX SOLUTIONS y sus clientes.</p>
+      <p>La contratación de servicios implica la aceptación de las condiciones de coordinación, tiempos de gestión estimados y responsabilidades administrativas descritas en la cotización ejecutiva correspondiente.</p>
+      <p>LOGIX SOLUTIONS se reserva el derecho de actualizar estos términos en cualquier momento, notificando a los clientes activos mediante los canales de contacto registrados.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalPrivacidad">
+  <div class="card-themed rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-bold text-primary">Aviso de Privacidad</h3>
+      <button type="button" class="close-modal text-muted text-2xl leading-none" data-modal="modalPrivacidad">&times;</button>
+    </div>
+    <div class="text-sm text-muted space-y-4 leading-relaxed">
+      <p>LOGIX SOLUTIONS recopila y administra información de contacto y datos de embarque exclusivamente para fines de gestión logística, cotización y seguimiento de servicios contratados.</p>
+      <p>Los datos proporcionados a través de formularios ejecutivos son tratados con estricta confidencialidad y compartidos únicamente con los aliados estratégicos necesarios para la correcta administración de su cadena de suministro.</p>
+      <p>Usted puede solicitar en cualquier momento la actualización o eliminación de sus datos a través de nuestros canales oficiales de contacto.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  AOS.init({ duration: 700, easing: 'ease-out-cubic', once: true });
+
+  // Mobile hamburger menu toggle
+  (function () {
+    const btn = document.getElementById('hamburgerBtn');
+    const drawer = document.getElementById('mobileDrawer');
+
+    btn.addEventListener('click', function () {
+      const isOpen = drawer.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    drawer.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        drawer.classList.remove('open');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  })();
+
+  // Tracking widget tab switching
+  (function () {
+    const tabs = document.querySelectorAll('#trackingTabs .tab-btn');
+    const label = document.getElementById('trackingLabel');
+    const labels = {
+      maritimo: 'Rastreo de contenedor marítimo',
+      aereo: 'Rastreo de guía aérea',
+      terrestre: 'Rastreo de embarque terrestre'
+    };
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        tabs.forEach(function (t) { t.classList.remove('active-tab'); });
+        tab.classList.add('active-tab');
+        label.textContent = labels[tab.dataset.tab];
+      });
+    });
+  })();
+
+  // CBM / chargeable weight calculator
+  (function () {
+    const largo = document.getElementById('cbmLargo');
+    const ancho = document.getElementById('cbmAncho');
+    const alto = document.getElementById('cbmAlto');
+    const cantidad = document.getElementById('cbmCantidad');
+    const pesoReal = document.getElementById('cbmPeso');
+    const modalidad = document.getElementById('cbmModalidad');
+
+    const outVolumen = document.getElementById('outVolumen');
+    const outPesoReal = document.getElementById('outPesoReal');
+    const outPesoVolumetrico = document.getElementById('outPesoVolumetrico');
+    const outPesoCobrable = document.getElementById('outPesoCobrable');
+
+    function parseVal(el) {
+      const v = parseFloat(el.value);
+      return isNaN(v) || v < 0 ? 0 : v;
+    }
+
+    function calcular() {
+      const l = parseVal(largo);
+      const a = parseVal(ancho);
+      const h = parseVal(alto);
+      const qty = parseVal(cantidad) || 0;
+      const real = parseVal(pesoReal);
+      const factor = modalidad.value === 'maritimo' ? 1000 : 166.67;
+
+      const volumenM3 = (l * a * h) / 1000000 * qty;
+      const pesoVolumetrico = volumenM3 * factor;
+      const pesoCobrable = Math.max(real, pesoVolumetrico);
+
+      outVolumen.textContent = volumenM3.toFixed(3) + ' m³';
+      outPesoReal.textContent = real.toFixed(2) + ' kg';
+      outPesoVolumetrico.textContent = pesoVolumetrico.toFixed(2) + ' kg';
+      outPesoCobrable.textContent = pesoCobrable.toFixed(2) + ' kg';
+    }
+
+    [largo, ancho, alto, cantidad, pesoReal].forEach(function (el) {
+      el.addEventListener('keyup', calcular);
+      el.addEventListener('change', calcular);
+    });
+    modalidad.addEventListener('change', calcular);
+
+    calcular();
+  })();
+
+  // Contact form dispatch to cotizaciones@logixsolutions.mx
+  (function () {
+    const form = document.getElementById('contactForm');
+    const DEST_EMAIL = 'cotizaciones@logixsolutions.mx';
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const servicio = document.getElementById('cfServicio').value;
+      const origen = document.getElementById('cfOrigen').value;
+      const destino = document.getElementById('cfDestino').value;
+      const dimensiones = document.getElementById('cfDimensiones').value;
+      const nombre = document.getElementById('cfNombre').value;
+      const correo = document.getElementById('cfCorreo').value;
+      const telefono = document.getElementById('cfTelefono').value;
+      const comentarios = document.getElementById('cfComentarios').value;
+
+      const subject = 'Solicitud de Cotización Ejecutiva - ' + servicio;
+      const body =
+        'Servicio: ' + servicio + '\n' +
+        'Origen: ' + origen + '\n' +
+        'Destino: ' + destino + '\n' +
+        'Dimensiones / Peso: ' + dimensiones + '\n' +
+        'Nombre: ' + nombre + '\n' +
+        'Correo: ' + correo + '\n' +
+        'Teléfono: ' + telefono + '\n' +
+        'Comentarios: ' + comentarios;
+
+      const mailtoLink = 'mailto:' + DEST_EMAIL +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(body);
+
+      window.location.href = mailtoLink;
+    });
+  })();
+
+  // Legal modals
+  (function () {
+    const openers = {
+      openTerminos: 'modalTerminos',
+      openPrivacidad: 'modalPrivacidad'
+    };
+
+    Object.keys(openers).forEach(function (btnId) {
+      const btn = document.getElementById(btnId);
+      const modal = document.getElementById(openers[btnId]);
+      btn.addEventListener('click', function () {
+        modal.classList.add('open');
+      });
+    });
+
+    document.querySelectorAll('.close-modal').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.getElementById(btn.dataset.modal).classList.remove('open');
+      });
+    });
+
+    document.querySelectorAll('.modal-overlay').forEach(function (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) overlay.classList.remove('open');
+      });
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) {
+          m.classList.remove('open');
+        });
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>
